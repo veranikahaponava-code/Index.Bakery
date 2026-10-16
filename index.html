@@ -1,0 +1,570 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Golden Crumb — Stone-oven bakery</title>
+<meta name="description" content="Butter croissants, cinnamon rolls and braided buns — baked at dawn in a stone oven, boxed to go.">
+<meta name="theme-color" content="#2E1B10">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400;1,9..144,600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cream:#FBF3E6; --paper:#F3E4CB; --paper2:#EAD3AE; --crust:#B8641F; --terra:#C0502A;
+  --cocoa:#2E1B10; --ink:#3A2418; --butter:#F3C56B; --muted:#7A5A44;
+  --gut:clamp(20px,5vw,72px);
+  --serif:'Fraunces',Georgia,'Times New Roman',serif;
+  --sans:'Manrope',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{background:var(--cream);color:var(--ink);font-family:var(--sans);font-size:17px;line-height:1.55;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+img,video{display:block;max-width:100%}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+a{color:inherit;text-decoration:none}
+em{font-style:italic;font-weight:400;color:var(--butter)}
+.paper em,.menu em,.order em{color:var(--terra)}
+
+/* progress */
+.bar{position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,var(--butter),var(--terra));z-index:60}
+
+/* nav */
+.nav{position:fixed;z-index:50;top:14px;left:50%;transform:translateX(-50%);width:min(1120px,calc(100% - 28px));
+  display:flex;align-items:center;gap:18px;padding:9px 10px 9px 22px;border-radius:999px;
+  background:rgba(46,27,16,.58);backdrop-filter:blur(16px) saturate(1.2);-webkit-backdrop-filter:blur(16px) saturate(1.2);
+  color:var(--cream);border:1px solid rgba(255,255,255,.12)}
+.logo{font-family:var(--serif);font-weight:600;font-size:21px;letter-spacing:-.01em;display:flex;align-items:center;gap:9px;white-space:nowrap}
+.logo i{width:11px;height:11px;border-radius:50%;background:var(--butter);box-shadow:0 0 0 4px rgba(243,197,107,.22)}
+.nav ul{display:flex;gap:26px;list-style:none;margin:0 auto;font-size:14.5px;font-weight:500}
+.nav ul a{opacity:.82;transition:opacity .2s}.nav ul a:hover{opacity:1}
+.nav .rt{display:flex;align-items:center;gap:10px}
+.lang{display:flex;background:rgba(255,255,255,.12);border-radius:999px;padding:3px}
+.lang button{padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:700;letter-spacing:.04em;opacity:.7}
+.lang button.on{background:var(--cream);color:var(--cocoa);opacity:1}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:999px;background:var(--butter);color:var(--cocoa);font-weight:700;font-size:14.5px;transition:transform .2s,background .2s}
+.pill:hover{transform:translateY(-1px);background:#f8d283}
+
+/* scroll video tracks */
+.track{position:relative;height:260vh}
+.track.t-hero{height:300vh}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;background:var(--cocoa)}
+.stage video,.stage .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:var(--ox,50%) 50%}
+.stage .poster{background-size:cover;background-position:var(--ox,50%) 50%}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(30,16,8,.72) 0%,rgba(30,16,8,.38) 38%,rgba(30,16,8,0) 68%),linear-gradient(0deg,rgba(30,16,8,.62) 0%,rgba(30,16,8,0) 46%)}
+.stage.right::after{background:linear-gradient(270deg,rgba(30,16,8,.72) 0%,rgba(30,16,8,.38) 38%,rgba(30,16,8,0) 68%),linear-gradient(0deg,rgba(30,16,8,.62) 0%,rgba(30,16,8,0) 46%)}
+.ui{position:absolute;z-index:3;left:var(--gut);bottom:13vh;max-width:min(640px,86vw);color:var(--cream);
+  opacity:0;transform:translateY(26px);transition:opacity .6s ease,transform .7s cubic-bezier(.2,.7,.2,1);pointer-events:none}
+.ui.r{left:auto;right:var(--gut);text-align:right}
+.ui.on{opacity:1;transform:none;pointer-events:auto}
+.eyebrow{font-size:12.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--butter);margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.ui.r .eyebrow{justify-content:flex-end}
+.eyebrow::before{content:"";width:34px;height:1px;background:currentColor;opacity:.7}
+.ui.r .eyebrow::before{display:none}
+.ui.r .eyebrow::after{content:"";width:34px;height:1px;background:currentColor;opacity:.7}
+.ui h1,.ui h2{font-family:var(--serif);font-weight:600;line-height:.98;letter-spacing:-.025em;text-wrap:balance}
+.ui h1{font-size:clamp(46px,8.6vw,132px)}
+.ui h2{font-size:clamp(40px,6.4vw,96px)}
+.ui p{margin-top:20px;font-size:clamp(16px,1.5vw,20px);line-height:1.5;max-width:30em;color:rgba(251,243,230,.9)}
+.ui.r p{margin-left:auto}
+.btns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:15px 26px;border-radius:999px;font-weight:700;font-size:15.5px;transition:transform .2s,background .2s,color .2s}
+.btn.primary{background:var(--butter);color:var(--cocoa)}.btn.primary:hover{background:#f8d283;transform:translateY(-2px)}
+.btn.ghost{border:1.5px solid rgba(251,243,230,.55);color:var(--cream)}.btn.ghost:hover{background:rgba(251,243,230,.14)}
+.btn.dark{background:var(--cocoa);color:var(--cream)}.btn.dark:hover{background:#4a2c1b;transform:translateY(-2px)}
+.hint{position:absolute;z-index:3;left:50%;bottom:22px;transform:translateX(-50%);color:var(--cream);font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;gap:10px;opacity:.85;transition:opacity .4s}
+.hint b{width:1px;height:38px;background:linear-gradient(var(--cream),transparent);animation:drip 1.8s ease-in-out infinite}
+@keyframes drip{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+.hint.off{opacity:0}
+
+/* marquee */
+.mq{background:var(--cocoa);color:var(--butter);overflow:hidden;white-space:nowrap;padding:20px 0;border-top:1px solid rgba(255,255,255,.08)}
+.mq div{display:inline-flex;animation:mq 38s linear infinite}
+.mq span{font-family:var(--serif);font-style:italic;font-size:clamp(22px,3vw,34px);padding:0 28px;display:inline-flex;align-items:center;gap:56px}
+.mq span::after{content:"✦";font-style:normal;font-size:.55em;color:var(--terra)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* sections */
+section.s{padding:clamp(80px,12vw,150px) var(--gut)}
+.wrap{max-width:1240px;margin:0 auto}
+.sec-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:clamp(36px,5vw,64px)}
+.sec-head .eyebrow{color:var(--terra)}
+.sec-head h2{font-family:var(--serif);font-weight:600;font-size:clamp(38px,5.6vw,82px);line-height:1;letter-spacing:-.025em;max-width:11em;text-wrap:balance}
+.sec-head p{max-width:24em;color:var(--muted);font-size:17px}
+
+/* menu */
+.menu{background:var(--cream)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px)}
+.card{background:#fff9ee;border-radius:26px;overflow:hidden;display:flex;flex-direction:column;border:1px solid rgba(58,36,24,.08);
+  transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s}
+.card:hover{transform:translateY(-6px);box-shadow:0 26px 50px -24px rgba(58,36,24,.38)}
+.ph{aspect-ratio:16/11;overflow:hidden;position:relative}
+.ph img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.card:hover .ph img{transform:scale(1.07)}
+.ph .no{position:absolute;left:16px;top:14px;font-family:var(--serif);font-style:italic;font-size:15px;color:var(--crust);opacity:.9}
+.cb{padding:22px 24px 24px;display:flex;flex-direction:column;gap:10px;flex:1}
+.cb h3{font-family:var(--serif);font-weight:600;font-size:26px;line-height:1.1;letter-spacing:-.015em}
+.cb p{color:var(--muted);font-size:15.5px;line-height:1.5;flex:1}
+.buy{display:flex;align-items:center;justify-content:space-between;margin-top:8px;gap:12px}
+.price{font-family:var(--serif);font-size:24px;font-weight:600}
+.add{padding:11px 20px;border-radius:999px;background:var(--cocoa);color:var(--cream);font-weight:700;font-size:14.5px;transition:background .2s,transform .2s}
+.add:hover{background:var(--terra);transform:translateY(-1px)}
+.step{display:inline-flex;align-items:center;border-radius:999px;background:var(--cocoa);color:var(--cream)}
+.step button{width:40px;height:40px;font-size:20px;font-weight:600;border-radius:50%;transition:background .2s}
+.step button:hover{background:rgba(255,255,255,.14)}
+.step b{min-width:26px;text-align:center;font-weight:700}
+
+/* order */
+.order{background:var(--paper)}
+.ogrid{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(24px,4vw,60px);align-items:start}
+.list{display:flex;flex-direction:column;gap:12px}
+.row{display:grid;grid-template-columns:96px 1fr auto auto;gap:16px;align-items:center;background:#fff9ee;border-radius:20px;padding:12px 18px 12px 12px;border:1px solid rgba(58,36,24,.08)}
+.row .th{width:96px;aspect-ratio:16/11;border-radius:12px;overflow:hidden;background:#F1DDBA}
+.row .th img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply}
+.row h4{font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.15}
+.row small{color:var(--muted);font-size:14px}
+.row .sum{font-family:var(--serif);font-weight:600;font-size:19px;min-width:70px;text-align:right}
+.empty{padding:44px 24px;text-align:center;border:1.5px dashed rgba(58,36,24,.28);border-radius:22px;color:var(--muted)}
+.empty a{color:var(--terra);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.panel{background:var(--cocoa);color:var(--cream);border-radius:28px;padding:clamp(24px,3vw,38px);position:sticky;top:90px}
+.panel h3{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.015em;margin-bottom:6px}
+.tot{display:flex;justify-content:space-between;align-items:baseline;padding:16px 0;margin:14px 0 18px;border-block:1px solid rgba(251,243,230,.18)}
+.tot span{color:rgba(251,243,230,.7)}.tot b{font-family:var(--serif);font-size:38px;font-weight:600;color:var(--butter)}
+.f{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.f label{font-size:12.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(251,243,230,.7)}
+.f input,.f select,.f textarea{width:100%;padding:13px 15px;border-radius:14px;border:1.5px solid rgba(251,243,230,.2);background:rgba(251,243,230,.07);color:var(--cream);font:inherit;font-size:16px;outline:none;transition:border .2s}
+.f input:focus,.f select:focus,.f textarea:focus{border-color:var(--butter)}
+.f select option{color:#222}
+.f textarea{resize:vertical;min-height:70px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.panel .btn{width:100%;justify-content:center;margin-top:6px}
+.err{color:#ffb59c;font-size:14px;margin:4px 0 0;min-height:1.2em}
+.ok{display:none;text-align:center;padding:20px 6px}
+.ok .big{font-family:var(--serif);font-size:34px;line-height:1.05;color:var(--butter);margin-bottom:14px}
+.ok p{color:rgba(251,243,230,.85)}
+.panel.done form{display:none}.panel.done .ok{display:block}.panel.done .tot,.panel.done h3,.panel.done .sub{display:none}
+.sub{color:rgba(251,243,230,.65);font-size:15px}
+
+/* visit */
+.visit{background:var(--cocoa);color:var(--cream)}
+.visit .sec-head .eyebrow{color:var(--butter)}.visit .sec-head p{color:rgba(251,243,230,.7)}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2vw,28px)}
+.vc{border:1px solid rgba(251,243,230,.16);border-radius:26px;padding:30px}
+.vc h4{font-size:12.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--butter);margin-bottom:16px}
+.vc p,.vc li{font-family:var(--serif);font-size:23px;line-height:1.35;list-style:none}
+.vc li{display:flex;justify-content:space-between;gap:14px;border-bottom:1px solid rgba(251,243,230,.1);padding:8px 0;font-size:20px}
+.vc li:last-child{border:0}
+.vc a.l{display:inline-block;margin-top:18px;font-family:var(--sans);font-size:15px;font-weight:700;color:var(--butter);border-bottom:1.5px solid currentColor}
+footer{background:#22130b;color:rgba(251,243,230,.6);padding:34px var(--gut);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:14px}
+footer .logo{color:var(--cream)}
+
+/* floating box */
+.fab{position:fixed;z-index:55;right:16px;bottom:calc(16px + env(safe-area-inset-bottom));display:flex;align-items:center;gap:12px;padding:13px 22px 13px 16px;border-radius:999px;
+  background:var(--butter);color:var(--cocoa);font-weight:700;box-shadow:0 14px 34px -10px rgba(0,0,0,.5);transform:translateY(90px);opacity:0;transition:.4s cubic-bezier(.2,.7,.2,1)}
+.fab.show{transform:none;opacity:1}
+.fab i{display:grid;place-items:center;min-width:28px;height:28px;border-radius:50%;background:var(--cocoa);color:var(--butter);font-style:normal;font-size:14px}
+.fab.bump{animation:bump .45s}
+@keyframes bump{40%{transform:scale(1.12)}}
+
+/* reveal */
+.rv{opacity:0;transform:translateY(34px);transition:opacity .8s ease,transform .9s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+
+@media(max-width:980px){
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .ogrid{grid-template-columns:1fr}.panel{position:static}
+  .vgrid{grid-template-columns:1fr}
+  .nav ul{display:none}.nav .rt{margin-left:auto}
+}
+@media(max-width:640px){
+  body{font-size:16px}
+  .nav{padding:8px 8px 8px 16px;gap:10px;top:10px}
+  .nav .pill{display:none}
+  .logo{font-size:19px}
+  .grid{grid-template-columns:1fr}
+  .ui{bottom:9vh}
+  .ui.r{left:var(--gut);right:auto;text-align:left}.ui.r .eyebrow{justify-content:flex-start}.ui.r .eyebrow::before{display:block}.ui.r .eyebrow::after{display:none}.ui.r p{margin-left:0}
+  .stage::after,.stage.right::after{background:linear-gradient(0deg,rgba(30,16,8,.82) 0%,rgba(30,16,8,.45) 42%,rgba(30,16,8,0) 72%)}
+  .row{grid-template-columns:72px 1fr auto;grid-template-areas:"t n n" "t s q";row-gap:8px}
+  .row .th{width:72px;grid-area:t}.row .nm{grid-area:n}.row .step{grid-area:q}.row .sum{grid-area:s;text-align:left}
+  .two{grid-template-columns:1fr}
+  .hint{display:none}
+}
+@media(prefers-reduced-motion:reduce){.mq div{animation:none}.rv{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="bar" id="bar"></div>
+
+<nav class="nav" id="nav">
+  <a class="logo" href="#top"><i></i>Golden Crumb</a>
+  <ul>
+    <li><a href="#menu" data-i="n_menu">Menu</a></li>
+    <li><a href="#box" data-i="n_box">To go</a></li>
+    <li><a href="#visit" data-i="n_visit">Visit</a></li>
+  </ul>
+  <div class="rt">
+    <div class="lang" id="lang"><button data-l="en" class="on">EN</button><button data-l="ru">RU</button></div>
+    <a class="pill" href="#order" data-i="n_order">Pre-order</a>
+  </div>
+</nav>
+
+<!-- 1 OVEN (hero) -->
+<div class="track t-hero" id="top" data-v="oven" style="--ox:60%">
+  <section class="stage" data-poster="oven-poster.jpg">
+    <div class="poster"></div><video muted playsinline preload="auto" aria-hidden="true"></video>
+    <div class="ui" data-a="0" data-b=".33">
+      <div class="eyebrow" data-i="h_eyebrow">Stone-oven bakery · open daily from 7</div>
+      <h1 data-i="h1">Warm from the <em>oven.</em></h1>
+      <p data-i="h1p">Butter croissants, cinnamon rolls and braided buns — baked at dawn, boxed to go.</p>
+      <div class="btns"><a class="btn primary" href="#menu" data-i="b_menu">See the menu</a><a class="btn ghost" href="#order" data-i="b_box">Build a box</a></div>
+    </div>
+    <div class="ui" data-a=".33" data-b=".66">
+      <div class="eyebrow" data-i="h2e">Chapter one</div>
+      <h2 data-i="h2">Fired at <em>dawn.</em></h2>
+      <p data-i="h2p">The stone oven wakes at four. Every tray comes out golden, flaky and still singing.</p>
+    </div>
+    <div class="ui r" data-a=".66" data-b="1.01">
+      <div class="eyebrow" data-i="h3e">The first batch</div>
+      <h2 data-i="h3">Out it <em>comes.</em></h2>
+      <p data-i="h3p">Keep scrolling — the morning case is full.</p>
+    </div>
+    <div class="hint" id="hint"><span data-i="scroll">Scroll</span><b></b></div>
+  </section>
+</div>
+
+<div class="mq" aria-hidden="true"><div id="mq"></div></div>
+
+<!-- MENU -->
+<section class="s menu" id="menu">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div>
+        <div class="eyebrow" data-i="m_e">The morning case</div>
+        <h2 data-i="m_h">Six things we do <em>really</em> well.</h2>
+      </div>
+      <p data-i="m_p">Baked in small batches. When a tray is gone, the next one is already in the oven.</p>
+    </div>
+    <div class="grid" id="grid"></div>
+  </div>
+</section>
+
+<!-- 3 BOX -->
+<div class="track" id="box" data-v="box" style="--ox:50%">
+  <section class="stage" data-poster="box-poster.jpg">
+    <div class="poster"></div><video muted playsinline preload="none" aria-hidden="true"></video>
+    <div class="ui" data-a="0" data-b=".34">
+      <div class="eyebrow" data-i="x1e">Chapter three</div>
+      <h2 data-i="x1">Packed <em>warm.</em></h2>
+      <p data-i="x1p">Every box is folded, lined and filled by hand.</p>
+    </div>
+    <div class="ui r" data-a=".34" data-b=".68">
+      <div class="eyebrow" data-i="x2e">Pre-order online</div>
+      <h2 data-i="x2">Ready when <em>you are.</em></h2>
+      <p data-i="x2p">Choose your pastries, pick a time, and we'll have the box waiting at the counter.</p>
+    </div>
+    <div class="ui" data-a=".68" data-b="1.01">
+      <div class="eyebrow" data-i="x3e">Your turn</div>
+      <h2 data-i="x3">Fill a box.</h2>
+      <div class="btns"><a class="btn primary" href="#order" data-i="x3b">Build your box ↓</a></div>
+    </div>
+  </section>
+</div>
+
+<!-- ORDER -->
+<section class="s order" id="order">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div>
+        <div class="eyebrow" data-i="o_e">Pick up in store</div>
+        <h2 data-i="o_h">Build your <em>box.</em></h2>
+      </div>
+      <p data-i="o_p">Add pastries from the menu, choose a pickup time and we'll keep your box warm.</p>
+    </div>
+    <div class="ogrid">
+      <div class="list" id="olist"></div>
+      <aside class="panel" id="panel">
+        <h3 data-i="p_h">Your pre-order</h3>
+        <div class="sub" data-i="p_s">Pay at the counter. No account needed.</div>
+        <div class="tot"><span data-i="p_t">Total</span><b id="total">$0.00</b></div>
+        <form id="form" novalidate>
+          <div class="two">
+            <div class="f"><label for="fn" data-i="p_n">Name</label><input id="fn" autocomplete="name" required></div>
+            <div class="f"><label for="fp" data-i="p_ph">Phone</label><input id="fp" type="tel" autocomplete="tel" inputmode="tel" required></div>
+          </div>
+          <div class="two">
+            <div class="f"><label for="fd" data-i="p_d">Day</label><select id="fd"></select></div>
+            <div class="f"><label for="ft" data-i="p_tm">Time</label><select id="ft"></select></div>
+          </div>
+          <div class="f"><label for="fm" data-i="p_nt">Note (optional)</label><textarea id="fm"></textarea></div>
+          <div class="err" id="err"></div>
+          <button class="btn primary" type="submit" data-i="p_go">Place pre-order</button>
+        </form>
+        <div class="ok" id="ok"><div class="big" id="okh"></div><p id="okp"></p><div class="btns" style="justify-content:center"><button class="btn ghost" id="again" data-i="p_again">Start a new box</button></div></div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- VISIT -->
+<section class="s visit" id="visit">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <div>
+        <div class="eyebrow" data-i="v_e">Come say hi</div>
+        <h2 data-i="v_h">Smell it from <em>the street.</em></h2>
+      </div>
+      <p data-i="v_p">Walk-ins welcome. The best choice is gone by ten, so come early.</p>
+    </div>
+    <div class="vgrid rv">
+      <div class="vc"><h4 data-i="v_a">Find us</h4><p>128 Maple Street<br>Chicago, IL 60614</p><a class="l" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=128+Maple+Street+Chicago+IL" data-i="v_dir">Get directions →</a></div>
+      <div class="vc"><h4 data-i="v_hh">Hours</h4><ul><li><span data-i="v_wd">Mon – Fri</span><span>7:00 – 18:00</span></li><li><span data-i="v_sa">Sat – Sun</span><span>8:00 – 16:00</span></li></ul></div>
+      <div class="vc"><h4 data-i="v_c">Say hello</h4><p>(312) 555-0142<br>hello@goldencrumb.com</p><a class="l" href="#order" data-i="v_pre">Pre-order a box →</a></div>
+    </div>
+  </div>
+</section>
+<footer>
+  <a class="logo" href="#top"><i></i>Golden Crumb</a>
+  <span data-i="f_t">Baked at dawn. Boxed with care.</span>
+  <span>© 2026</span>
+</footer>
+
+<a class="fab" id="fab" href="#order"><i id="fabn">0</i><span id="fabt"></span></a>
+
+<script>
+(function(){
+'use strict';
+/* ---------- data ---------- */
+var P=[
+ {id:'cinnamon',price:5.5,tint:'#EFD3A8'},
+ {id:'choco',price:5.25,tint:'#E8CBA4'},
+ {id:'coconut',price:5.25,tint:'#F1DBB4'},
+ {id:'almond',price:5.75,tint:'#EDD0A6'},
+ {id:'butter',price:4.25,tint:'#F2D9AE'},
+ {id:'poppy',price:4.75,tint:'#E9CEA5'}
+];
+var D={
+en:{
+ n_menu:'Menu',n_craft:'Craft',n_box:'To go',n_visit:'Visit',n_order:'Pre-order',
+ h_eyebrow:'Stone-oven bakery · open daily from 7',h1:'Warm from the <em>oven.</em>',
+ h1p:'Butter croissants, cinnamon rolls and braided buns — baked at dawn, boxed to go.',
+ b_menu:'See the menu',b_box:'Build a box',scroll:'Scroll',
+ h2e:'Chapter one',h2:'Fired at <em>dawn.</em>',h2p:'The stone oven wakes at four. Every tray comes out golden, flaky and still singing.',
+ h3e:'The first batch',h3:'Out it <em>comes.</em>',h3p:'Keep scrolling — the morning case is full.',
+ mq:'Butter|Patience|Fire|Flour|Time|Warmth',
+ m_e:'The morning case',m_h:'Six things we do <em>really</em> well.',m_p:'Baked in small batches. When a tray is gone, the next one is already in the oven.',
+ c1e:'Chapter one',c1:'Finished <em>by hand.</em>',c1p:'Nothing leaves the counter until someone who loves it has touched it.',
+ c2e:'The last step',c2:'A ribbon of <em>dark chocolate.</em>',c2p:'Toasted nuts, a pinch of sea salt, one croissant at a time.',
+ c3e:'Slow on purpose',c3:'Never <em>rushed.</em>',c3p:'Laminated over days, eaten in about three bites.',
+ x1e:'Chapter two',x1:'Packed <em>warm.</em>',x1p:'Every box is folded, lined and filled by hand.',
+ x2e:'Pre-order online',x2:'Ready when <em>you are.</em>',x2p:"Choose your pastries, pick a time, and we'll have the box waiting at the counter.",
+ x3e:'Your turn',x3:'Fill a box.',x3b:'Build your box ↓',
+ o_e:'Pick up in store',o_h:'Build your <em>box.</em>',o_p:"Add pastries from the menu, choose a pickup time and we'll keep your box warm.",
+ p_h:'Your pre-order',p_s:'Pay at the counter. No account needed.',p_t:'Total',p_n:'Name',p_ph:'Phone',p_d:'Day',p_tm:'Time',p_nt:'Note (optional)',p_go:'Place pre-order',p_again:'Start a new box',
+ e_empty:'Your box is empty.',e_link:'Add something from the menu',
+ add:'Add to box',fab:'Your box',today:'Today',tomorrow:'Tomorrow',
+ er_box:'Add at least one pastry to your box.',er_f:'Please enter your name and phone.',
+ ok_h:'Thank you, {n}!',ok_p:'Your box ({c} items, {t}) will be waiting {d} at {tm}. We will text you at {p} if anything changes.',
+ v_e:'Come say hi',v_h:'Smell it from <em>the street.</em>',v_p:'Walk-ins welcome. The best choice is gone by ten, so come early.',
+ v_a:'Find us',v_dir:'Get directions →',v_hh:'Hours',v_wd:'Mon – Fri',v_sa:'Sat – Sun',v_c:'Say hello',v_pre:'Pre-order a box →',f_t:'Baked at dawn. Boxed with care.',
+ cinnamon:['Cinnamon Roll','Soft spiral dough, brown-sugar cinnamon and a warm cream-cheese glaze.'],
+ choco:['Chocolate Croissant','Flaky butter layers, a ribbon of dark chocolate and toasted nuts.'],
+ coconut:['Coconut Croissant','Toasted coconut flakes and a snow of powdered sugar.'],
+ almond:['Almond Croissant','Filled with almond cream and topped with sliced almonds.'],
+ butter:['Butter Croissant','The classic. Shatter-crisp outside, honeycomb inside.'],
+ poppy:['Poppy Seed Twist','Braided brioche dough, poppy seeds and a touch of sea salt.']
+},
+ru:{
+ n_menu:'Меню',n_craft:'Мастерство',n_box:'С собой',n_visit:'Адрес',n_order:'Заказать',
+ h_eyebrow:'Пекарня с каменной печью · каждый день с 7',h1:'Тёплое прямо из <em>печи.</em>',
+ h1p:'Масляные круассаны, булочки с корицей и плетёные булки — выпекаем на рассвете, упаковываем с собой.',
+ b_menu:'Смотреть меню',b_box:'Собрать коробку',scroll:'Листайте',
+ h2e:'Глава первая',h2:'Огонь на <em>рассвете.</em>',h2p:'Каменная печь просыпается в четыре. Каждый противень выходит золотым, слоёным и ещё поющим.',
+ h3e:'Первая партия',h3:'Достаём из <em>печи.</em>',h3p:'Листайте дальше — утренняя витрина уже полна.',
+ mq:'Масло|Терпение|Огонь|Мука|Время|Тепло',
+ m_e:'Утренняя витрина',m_h:'Шесть вещей, которые мы делаем <em>особенно</em> хорошо.',m_p:'Печём небольшими партиями. Пока один противень разбирают, следующий уже в печи.',
+ c1e:'Глава первая',c1:'Доделано <em>вручную.</em>',c1p:'Ничто не уходит с прилавка, пока к нему не прикоснётся тот, кто это любит.',
+ c2e:'Последний штрих',c2:'Лента <em>тёмного шоколада.</em>',c2p:'Обжаренные орехи, щепотка морской соли, по одному круассану.',
+ c3e:'Неспешно, как надо',c3:'Без <em>спешки.</em>',c3p:'Тесто слоится днями, а съедается примерно за три укуса.',
+ x1e:'Глава вторая',x1:'Упаковано <em>тёплым.</em>',x1p:'Каждая коробка собрана и выложена вручную.',
+ x2e:'Предзаказ онлайн',x2:'Готово, когда <em>вы придёте.</em>',x2p:'Выберите выпечку и время — коробка будет ждать вас на прилавке.',
+ x3e:'Ваш ход',x3:'Соберите коробку.',x3b:'Собрать коробку ↓',
+ o_e:'Самовывоз из пекарни',o_h:'Соберите свою <em>коробку.</em>',o_p:'Добавляйте выпечку из меню, выбирайте время — мы сохраним коробку тёплой.',
+ p_h:'Ваш предзаказ',p_s:'Оплата на месте. Регистрация не нужна.',p_t:'Итого',p_n:'Имя',p_ph:'Телефон',p_d:'День',p_tm:'Время',p_nt:'Комментарий (по желанию)',p_go:'Оформить предзаказ',p_again:'Собрать новую коробку',
+ e_empty:'Ваша коробка пока пуста.',e_link:'Добавьте что-нибудь из меню',
+ add:'В коробку',fab:'Ваша коробка',today:'Сегодня',tomorrow:'Завтра',
+ er_box:'Добавьте в коробку хотя бы одну позицию.',er_f:'Укажите имя и телефон.',
+ ok_h:'Спасибо, {n}!',ok_p:'Ваша коробка ({c} шт., {t}) будет ждать {d} в {tm}. Если что-то изменится, мы напишем на {p}.',
+ v_e:'Заходите',v_h:'Запах слышно <em>с улицы.</em>',v_p:'Приходите без записи. Самое лучшее разбирают до десяти, так что лучше пораньше.',
+ v_a:'Где нас найти',v_dir:'Построить маршрут →',v_hh:'Часы работы',v_wd:'Пн – Пт',v_sa:'Сб – Вс',v_c:'Связаться',v_pre:'Заказать коробку →',f_t:'Выпечено на рассвете. Упаковано с заботой.',
+ cinnamon:['Булочка с корицей','Мягкая спираль из теста с корицей и коричневым сахаром под тёплой сливочной глазурью.'],
+ choco:['Круассан с шоколадом','Хрустящие масляные слои, лента тёмного шоколада и обжаренные орехи.'],
+ coconut:['Кокосовый круассан','Обжаренная кокосовая стружка и сахарная пудра.'],
+ almond:['Миндальный круассан','С миндальным кремом и лепестками миндаля.'],
+ butter:['Классический круассан','Классика: хрустящая корочка снаружи, воздушные соты внутри.'],
+ poppy:['Плетёная булочка с маком','Плетёное сдобное тесто, мак и щепотка морской соли.']
+}};
+
+var LANG='en',qty={};
+try{LANG=localStorage.getItem('gc_lang')||((navigator.language||'').toLowerCase().indexOf('ru')===0?'ru':'en')}catch(e){}
+try{qty=JSON.parse(localStorage.getItem('gc_box')||'{}')||{}}catch(e){qty={}}
+var $=function(s,r){return (r||document).querySelector(s)};
+var $$=function(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))};
+function t(k){var d=D[LANG][k];return d==null?D.en[k]:d}
+function money(n){return '$'+n.toFixed(2)}
+function fill(s,o){return s.replace(/\{(\w+)\}/g,function(_,k){return o[k]})}
+
+/* ---------- render ---------- */
+function applyStatic(){
+  document.documentElement.lang=LANG;
+  $$('[data-i]').forEach(function(el){el.innerHTML=t(el.getAttribute('data-i'))});
+  var items=t('mq').split('|'),h='';
+  for(var r=0;r<2;r++){items.forEach(function(x){h+='<span>'+x+'</span>'});}
+  h=h+h;$('#mq').innerHTML=h;
+  $$('#lang button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-l')===LANG)});
+}
+function renderMenu(){
+  $('#grid').innerHTML=P.map(function(p,i){
+    var n=t(p.id);
+    return '<article class="card rv" data-id="'+p.id+'"><div class="ph" style="background:'+p.tint+'"><span class="no">0'+(i+1)+'</span>'+
+      '<img src="'+p.id+'.jpg" alt="'+n[0]+'" loading="lazy" width="1100" height="614"></div>'+
+      '<div class="cb"><h3>'+n[0]+'</h3><p>'+n[1]+'</p><div class="buy"><span class="price">'+money(p.price)+'</span><span class="ctl"></span></div></div></article>';
+  }).join('');
+  observe();
+  P.forEach(function(p){drawCtl(p.id)});
+}
+function drawCtl(id){
+  var card=$('.card[data-id="'+id+'"] .ctl');if(!card)return;
+  var q=qty[id]||0;
+  card.innerHTML=q>0?'<span class="step"><button data-d="-1" data-id="'+id+'" aria-label="−">−</button><b>'+q+'</b><button data-d="1" data-id="'+id+'" aria-label="+">+</button></span>'
+    :'<button class="add" data-d="1" data-id="'+id+'">'+t('add')+'</button>';
+}
+function renderOrder(){
+  var ids=P.filter(function(p){return qty[p.id]>0});
+  var el=$('#olist');
+  if(!ids.length){el.innerHTML='<div class="empty">'+t('e_empty')+'<br><a href="#menu">'+t('e_link')+'</a></div>';}
+  else el.innerHTML=ids.map(function(p){var n=t(p.id)[0],q=qty[p.id];
+    return '<div class="row"><div class="th"><img src="'+p.id+'.jpg" alt="" loading="lazy"></div><div class="nm"><h4>'+n+'</h4><small>'+money(p.price)+'</small></div>'+
+      '<span class="step"><button data-d="-1" data-id="'+p.id+'" aria-label="−">−</button><b>'+q+'</b><button data-d="1" data-id="'+p.id+'" aria-label="+">+</button></span>'+
+      '<span class="sum">'+money(p.price*q)+'</span></div>'}).join('');
+}
+function totals(){var c=0,s=0;P.forEach(function(p){var q=qty[p.id]||0;c+=q;s+=q*p.price});return{c:c,s:s}}
+function renderBar(bump){
+  var T=totals();$('#total').textContent=money(T.s);
+  var f=$('#fab');$('#fabn').textContent=T.c;$('#fabt').textContent=t('fab')+' · '+money(T.s);
+  f.classList.toggle('show',T.c>0);
+  if(bump){f.classList.remove('bump');void f.offsetWidth;f.classList.add('bump')}
+}
+function change(id,d){
+  var q=Math.max(0,Math.min(20,(qty[id]||0)+d));
+  if(q)qty[id]=q;else delete qty[id];
+  try{localStorage.setItem('gc_box',JSON.stringify(qty))}catch(e){}
+  drawCtl(id);renderOrder();renderBar(d>0);
+}
+document.addEventListener('click',function(e){
+  var b=e.target.closest('button[data-id]');
+  if(b){change(b.getAttribute('data-id'),parseInt(b.getAttribute('data-d'),10))}
+});
+/* pickup selects */
+function renderPickup(){
+  var fd=$('#fd'),ft=$('#ft'),cur=fd.value,curT=ft.value,now=new Date(),h='';
+  var loc=LANG==='ru'?'ru-RU':'en-US';
+  for(var i=0;i<4;i++){
+    var d=new Date(now.getFullYear(),now.getMonth(),now.getDate()+i);
+    var nm=new Intl.DateTimeFormat(loc,{weekday:'long',month:'short',day:'numeric'}).format(d);
+    var pre=i===0?t('today')+', ':i===1?t('tomorrow')+', ':'';
+    h+='<option value="'+i+'">'+pre+nm+'</option>';
+  }
+  fd.innerHTML=h;if(cur)fd.value=cur;
+  var slots=[];for(var hr=8;hr<=17;hr++){slots.push(hr)}
+  ft.innerHTML=slots.map(function(hr){
+    var lab=LANG==='ru'?(hr<10?'0':'')+hr+':00':((hr%12)||12)+':00 '+(hr<12?'AM':'PM');
+    return '<option value="'+hr+'">'+lab+'</option>'}).join('');
+  if(curT)ft.value=curT;
+}
+$('#form').addEventListener('submit',function(e){
+  e.preventDefault();
+  var T=totals(),n=$('#fn').value.trim(),p=$('#fp').value.trim(),err=$('#err');
+  if(!T.c){err.textContent=t('er_box');return}
+  if(!n||p.replace(/\D/g,'').length<7){err.textContent=t('er_f');return}
+  err.textContent='';
+  $('#okh').textContent=fill(t('ok_h'),{n:n});
+  $('#okp').textContent=fill(t('ok_p'),{c:T.c,t:money(T.s),d:$('#fd').selectedOptions[0].text,tm:$('#ft').selectedOptions[0].text,p:p});
+  $('#panel').classList.add('done');
+});
+$('#again').addEventListener('click',function(){
+  qty={};try{localStorage.removeItem('gc_box')}catch(e){}
+  $('#form').reset();$('#panel').classList.remove('done');
+  P.forEach(function(p){drawCtl(p.id)});renderOrder();renderBar();
+});
+function setLang(l){
+  LANG=l;try{localStorage.setItem('gc_lang',l)}catch(e){}
+  applyStatic();renderMenu();renderOrder();renderPickup();renderBar();
+  document.title=l==='ru'?'Golden Crumb — Пекарня с каменной печью':'Golden Crumb — Stone-oven bakery';
+}
+$('#lang').addEventListener('click',function(e){var b=e.target.closest('button[data-l]');if(b)setLang(b.getAttribute('data-l'))});
+
+/* reveal */
+var io=('IntersectionObserver' in window)?new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}})},{threshold:.12}):null;
+function observe(){$$('.rv:not(.in)').forEach(function(el,i){if(io){el.style.transitionDelay=(el.classList.contains('card')?(i%3)*70:0)+'ms';io.observe(el)}else el.classList.add('in')})}
+
+/* ---------- scroll video ---------- */
+var tracks=$$('.track').map(function(el){
+  var st=$('.stage',el),v=$('video',el),poster=$('.poster',el);
+  poster.style.backgroundImage='url('+st.getAttribute('data-poster')+')';
+  v.muted=true;v.setAttribute('playsinline','');v.setAttribute('webkit-playsinline','');
+  return{el:el,v:v,name:el.getAttribute('data-v'),ui:$$('.ui',el),cur:0,tgt:0,loaded:false,ready:false,poster:poster,last:-1};
+});
+var mp4=document.createElement('video').canPlayType('video/mp4; codecs="avc1.42E01E"');
+function load(tr){
+  if(tr.loaded)return;tr.loaded=true;
+  tr.v.preload='auto';tr.v.src=tr.name+(mp4?'.mp4':'.webm');
+  tr.v.addEventListener('loadedmetadata',function(){tr.ready=true;tr.last=-1});
+  tr.v.addEventListener('loadeddata',function(){tr.poster.style.opacity=0});
+  tr.v.load();
+}
+var unlocked=false;
+function unlock(){
+  if(unlocked)return;unlocked=true;
+  tracks.forEach(function(tr){load(tr);var p=tr.v.play();if(p&&p.then)p.then(function(){tr.v.pause()}).catch(function(){})});
+}
+['touchstart','pointerdown','keydown'].forEach(function(ev){window.addEventListener(ev,unlock,{once:true,passive:true})});
+load(tracks[0]);
+
+var bar=$('#bar'),hint=$('#hint');
+function clamp(x,a,b){return x<a?a:x>b?b:x}
+function tick(){
+  var H=window.innerHeight;
+  tracks.forEach(function(tr){
+    var r=tr.el.getBoundingClientRect();
+    if(r.bottom<-H*1.2||r.top>H*2.2)return;
+    if(r.top<H*2)load(tr);
+    var span=r.height-H,p=clamp(-r.top/span,0,1);
+    tr.tgt=p;
+    var d=tr.tgt-tr.cur;tr.cur=Math.abs(d)<.0004?tr.tgt:tr.cur+d*.14;
+    if(tr.ready&&tr.v.duration){
+      var tm=tr.cur*(tr.v.duration-.05);
+      if(Math.abs(tr.v.currentTime-tm)>.012){try{tr.v.currentTime=tm}catch(e){}}
+    }
+    tr.ui.forEach(function(u){
+      var a=parseFloat(u.getAttribute('data-a')),b=parseFloat(u.getAttribute('data-b'));
+      var on=(r.top<H*.5&&r.bottom>H*.5)&&p>=a&&p<b;
+      if(u.classList.contains('on')!==on)u.classList.toggle('on',on);
+    });
+  });
+  var doc=document.documentElement,sp=doc.scrollHeight-H;
+  bar.style.transform='scaleX('+(sp>0?clamp(window.scrollY/sp,0,1):0)+')';
+  hint.classList.toggle('off',window.scrollY>60);
+  requestAnimationFrame(tick);
+}
+
+/* init */
+applyStatic();renderMenu();renderOrder();renderPickup();renderBar();
+$$('.sec-head,.vgrid').forEach(function(el){el.classList.add('rv')});observe();
+setLang(LANG);
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
